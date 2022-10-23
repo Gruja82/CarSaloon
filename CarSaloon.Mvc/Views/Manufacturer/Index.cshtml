@@ -1,0 +1,62 @@
+﻿@model Pagination<ManufacturerViewModel>
+
+<h1 class="text-center">Manufacturers</h1>
+
+<div class="text-lg-end">
+    <a asp-action="Create" class="btn btn-primary rounded">New Manufacturer</a>
+</div>
+
+<div>
+    <form asp-action="Index" method="post" enctype="multipart/form-data">
+        <div>
+            <p>
+                <input type="text" name="searchtext" placeholder="Code--Name" />
+                <input type="submit" value="Search" class="btn btn-outline-dark btn-secondary" />
+            </p>
+        </div>
+
+        <ul class="list-group">
+            @foreach (var manufacturer in Model.DataList)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Edit" asp-route-Id="@manufacturer.Id" style="text-decoration:none">
+                        <div class="card" style="width:fit-content">
+                            <img class="card-img-top" src="~/images/Manufacturers/@manufacturer.ImageString" width="200" height="200" asp-append-version=true style="object-fit:cover" />
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td>@manufacturer.Code</td>
+                                        <td>@manufacturer.Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <div class="container m-3">
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                @if (i != Model.CurrentPageIndex)
+                {
+                    <input type="submit" name="pageIndex" class="btn btn-outline-info" value="@i" />
+                }
+                else
+                {
+                    <span class="btn btn-info">@i</span>
+                }
+            }
+
+            Items per page:
+            <select asp-for="PageSize">
+                @for (int i = 4; i <= 10; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </select>
+            <input type="submit" value="Confirm" class="btn btn-secondary rounded" />
+        </div>
+    </form>
+</div>

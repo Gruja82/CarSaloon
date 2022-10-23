@@ -1,0 +1,81 @@
+﻿@model Pagination<CarViewModel>
+
+@{
+    List<string> categories = ViewBag.Categories as List<string>;
+    List<string> manufacturers = ViewBag.Manufacturers as List<string>;
+}
+
+<h1 class="text-center">Cars</h1>
+
+<div class="text-lg-end">
+    <a asp-action="Create" class="btn btn-primary rounded">New Car</a>
+</div>
+
+<div>
+    <form asp-action="Index" method="post" enctype="multipart/form-data">
+        <div>
+            <p>
+                <input type="text" name="searchtext" placeholder="Name--Model" />
+                <select name="category">
+                    <option>Select category</option>
+                    @foreach (var category in categories)
+                    {
+                        <option>@category</option>
+                    }
+                </select>
+                <select name="manufacturer">
+                    <option>Select manufacturer</option>
+                    @foreach (var manufacturer in manufacturers)
+                    {
+                        <option>@manufacturer</option>
+                    }
+                </select>
+                <input type="submit" value="Search" class="btn btn-outline-dark btn-secondary" />
+            </p>
+        </div>
+
+        <ul class="list-group">
+            @foreach (var car in Model.DataList)
+            {
+                <li class="list-group-item">
+                    <a asp-action="Edit" asp-route-Id="@car.Id" style="text-decoration:none">
+                        <div class="card" style="width:fit-content">
+                            <img class="card-img-top" src="~/images/Cars/@car.ImageString" width="200" height="200" asp-append-version=true style="object-fit:cover" />
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td>@car.Code</td>
+                                        <td>@car.Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <div class="container m-3">
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                @if (i != Model.CurrentPageIndex)
+                {
+                    <input type="submit" name="pageIndex" class="btn btn-outline-info" value="@i" />
+                }
+                else
+                {
+                    <span class="btn btn-info">@i</span>
+                }
+            }
+
+            Items per page:
+            <select asp-for="PageSize">
+                @for (int i = 4; i <= 10; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </select>
+            <input type="submit" value="Confirm" class="btn btn-secondary rounded" />
+        </div>
+    </form>
+</div>
